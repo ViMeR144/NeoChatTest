@@ -1,0 +1,25 @@
+{
+  "name": "neochat-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "prisma:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13",
+    "speakeasy": "^2.0.0",
+    "twilio": "^4.23.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0"
+  }
+}
+
+
