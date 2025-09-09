@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import { default as ndFetch } from 'node-fetch';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -61,7 +61,7 @@ app.post('/chat', async (req, res) => {
     const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-4o-mini');
     const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
 
-    const resp = await fetch(apiBase + '/chat/completions', {
+    const resp = await ndFetch(apiBase + '/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
