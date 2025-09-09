@@ -1,9 +1,11 @@
+import fetch from 'node-fetch';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
+import fetch from 'node-fetch';
 
 dotenv.config();
 const app = express();
