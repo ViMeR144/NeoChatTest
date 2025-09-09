@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Чат ИИ</title>
+  <title>NeoChat</title>
   <style>
     :root { --chat-w: 1300px; --chat-h: 810px; --stroke: #e6e9ef; --stroke-strong: #d8dee8; --radius: 18px; }
     /* Базовая раскладка: страница не скроллится, скроллятся только колонки */
@@ -502,6 +502,9 @@
   </div>
 
   <script>
+    const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3001'
+      : 'https://neochattest.onrender.com';
     const screenSearch = document.getElementById('screen-search');
     const screenChat = document.getElementById('screen-chat');
     const searchForm = document.getElementById('searchForm');
@@ -608,7 +611,7 @@
       const wrap = document.createElement('div');
       wrap.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
       const author = document.createElement('small');
-      author.textContent = role === 'user' ? 'Вы' : 'ИИ';
+      author.textContent = role === 'user' ? 'Вы' : 'NeoChat';
       const p = document.createElement('div');
       p.textContent = text;
       wrap.appendChild(author);
@@ -618,9 +621,28 @@
       requestAnimationFrame(()=>{ messagesEl.scrollTop = messagesEl.scrollHeight; });
     }
 
-    function sendToAI(text, chat) {
-      // Пока ИИ не подключён – ничего не отвечаем, просто сохраняем пользовательские сообщения
-      // (оставлено для совместимости API)
+    async function sendToAI(text, chat) {
+      try {
+        const resp = await fetch(API_BASE + '/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: 'Ты дружелюбный помощник.' },
+              ...chat.msgs.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })),
+              { role: 'user', content: text }
+            ]
+          })
+        });
+        const data = await resp.json();
+        const reply = (data && data.reply) || 'Извините, произошла ошибка.';
+        chat.msgs.push({ role: 'ai', text: reply });
+        addMsgEl('ai', reply);
+      } catch (e) {
+        const err = 'Ошибка запроса к ИИ';
+        chat.msgs.push({ role: 'ai', text: err });
+        addMsgEl('ai', err);
+      }
     }
 
     searchForm.addEventListener('submit', (e) => {

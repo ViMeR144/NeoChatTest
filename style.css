@@ -313,4 +313,28 @@
   margin-top: 6px;
 }
 
-    
+/* Responsive tweaks for laptops and smaller screens */
+@media (max-width: 1200px) {
+  .auth-hero { top: 90px; }
+  .auth-hero h1 { font-size: clamp(24px, 3.4vw, 40px); }
+  .auth-hero-glow { width: 360px; height: 360px; filter: blur(52px); }
+}
+
+@media (max-width: 992px) {
+  .form { width: 420px; padding: 26px; }
+  .inputForm { height: 48px; }
+  .button-submit, .btn { height: 48px; }
+}
+
+@media (max-width: 820px) {
+  .form { width: 380px; padding: 22px; }
+  .auth-hero { top: 80px; }
+  .auth-hero h1 { font-size: clamp(22px, 5.2vw, 36px); }
+}
+
+@media (max-width: 640px) {
+  .page-center { align-items: flex-start; padding-top: 110px; }
+  .auth-hero { position: absolute; top: 20px; }
+  .auth-hero-glow { width: 300px; height: 300px; filter: blur(46px); }
+  .form { width: calc(100vw - 32px); max-width: 420px; margin: 0 16px; border-radius: 16px; }
+}
