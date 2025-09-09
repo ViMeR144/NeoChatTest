@@ -26,7 +26,16 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json());
-
+// Simple probes
+app.get('/', (req, res) => { res.type('text/plain').send('OK'); });
+app.get('/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: String(e && e.message || e) });
+  }
+});
 // email transporter (best-effort)
 let transporter = null;
 try {
