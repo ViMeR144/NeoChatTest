@@ -38,6 +38,11 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Helpful hint for accidental GET requests
+app.get('/chat', (req, res) => {
+  res.status(405).type('text/plain').send('Use POST /chat');
+});
+
 // POST /chat { messages: [{role, content}], model? }
 app.post('/chat', async (req, res) => {
   try {
