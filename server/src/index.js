@@ -27,6 +27,63 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
+// Simple probes
+app.get('/', (req, res) => { res.type('text/plain').send('OK'); });
+app.get('/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: String(e && e.message || e) });
+  }
+});
+
+// POST /chat { messages: [{role, content}], model? }
+app.post('/chat', async (req, res) => {
+  try {
+    const { messages, model } = req.body || {};
+    const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
+    const apiKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
+    const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
+    if (!Array.isArray(messages) || !messages.length) {
+      return res.status(400).json({ error: 'messages required' });
+    }
+    // If no key configured, return a simple echo for development
+    if (!apiKey) {
+      const last = messages[messages.length - 1];
+      return res.json({ ok: true, reply: `Эхо: ${last && last.content ? String(last.content).slice(0, 400) : ''}` });
+    }
+
+    const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-4o-mini');
+    const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
+
+    const resp = await fetch(apiBase + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        ...(usingOpenRouter ? { 'HTTP-Referer': process.env.WEB_ORIGIN || 'http://localhost', 'X-Title': 'NeoChat' } : {})
+      },
+      body: JSON.stringify({
+        model: effectiveModel,
+        messages: messages.map(m => ({ role: m.role || 'user', content: String(m.content || '') })),
+        temperature: 0.7
+      })
+    });
+    if (!resp.ok) {
+      const t = await resp.text();
+      console.error('OpenAI error:', resp.status, t);
+      return res.status(500).json({ error: 'openai_error', details: (process.env.NODE_ENV === 'production') ? undefined : t });
+    }
+    const data = await resp.json();
+    const reply = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '';
+    res.json({ ok: true, reply });
+  } catch (e) {
+    console.error('Chat route error:', e);
+    res.status(500).json({ error: 'server_error', details: (process.env.NODE_ENV === 'production') ? undefined : String(e && e.message || e) });
+  }
+});
+
 // email transporter (best-effort)
 let transporter = null;
 try {
