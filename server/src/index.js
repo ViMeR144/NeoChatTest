@@ -26,18 +26,15 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json());
-
 // Simple probes
 app.get('/', (req, res) => { res.type('text/plain').send('OK'); });
 app.get('/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ ok: false, error: String(e && e.message || e) });
+  } catch (e) {    res.status(500).json({ ok: false, error: String(e && e.message || e) });
   }
 });
-
 // Helpful hint for accidental GET requests
 app.get('/chat', (req, res) => {
   res.status(405).type('text/plain').send('Use POST /chat');
@@ -88,7 +85,6 @@ app.post('/chat', async (req, res) => {
     res.status(500).json({ error: 'server_error', details: (process.env.NODE_ENV === 'production') ? undefined : String(e && e.message || e) });
   }
 });
-
 // email transporter (best-effort)
 let transporter = null;
 try {
