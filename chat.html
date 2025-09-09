@@ -613,11 +613,19 @@
       const author = document.createElement('small');
       author.textContent = role === 'user' ? 'Вы' : 'NeoChat';
       const p = document.createElement('div');
-      p.textContent = text;
+      if (role !== 'user') {
+        // простая анимация набора текста для ответа ИИ
+        let i = 0;
+        (function type(){
+          p.textContent = text.slice(0, i++);
+          if (i <= text.length) requestAnimationFrame(type);
+        })();
+      } else {
+        p.textContent = text;
+      }
       wrap.appendChild(author);
       wrap.appendChild(p);
       messagesEl.appendChild(wrap);
-      // автопрокрутка к последнему сообщению
       requestAnimationFrame(()=>{ messagesEl.scrollTop = messagesEl.scrollHeight; });
     }
 
