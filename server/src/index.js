@@ -63,8 +63,7 @@ app.post('/chat', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        ...(usingOpenRouter ? { 'HTTP-Referer': process.env.WEB_ORIGIN || 'http://localhost', 'X-Title': 'NeoChat' } : {})
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: effectiveModel,
