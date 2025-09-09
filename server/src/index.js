@@ -47,7 +47,9 @@ app.post('/chat', async (req, res) => {
   try {
     const { messages, model } = req.body || {};
     const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
-    const apiKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
+    // sanitize API key (strip quotes/spaces/newlines)
+    const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
+    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '');
     const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
     if (!Array.isArray(messages) || !messages.length) {
       return res.status(400).json({ error: 'messages required' });
@@ -60,6 +62,11 @@ app.post('/chat', async (req, res) => {
 
     const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-4o-mini');
     const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
+
+    // guard: invalid/non-ascii characters in key
+    if (!apiKey || /[^ -~]/.test(apiKey)) {
+      return res.status(500).json({ error: 'invalid_api_key' });
+    }
 
     const resp = await ndFetch(apiBase + '/chat/completions', {
       method: 'POST',
