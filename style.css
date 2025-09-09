@@ -44,13 +44,6 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Mobile responsiveness for auth forms */
-@media (max-width: 768px) {
-  .auth-hero { top: 80px; }
-  .form { width: min(92vw, 520px); padding: 20px; }
-  .toast { min-width: 280px; max-width: 92vw; }
-}
-
 ::placeholder {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -232,21 +225,6 @@
   border: 1px solid #5c94f0;
   ;
 }
-
-/* OTP login compact styles */
-.otp-box { margin-top: 8px; }
-.otp-box .hint { text-align: left; color: #667085; font-size: 13px; margin: 6px 0; }
-.otp-box .flex-row { justify-content: space-between; gap: 10px; }
-.otp-box .btn { height: 42px; }
-.otp-box input.input { max-width: 200px; }
-
-/* 6-digit code inputs */
-.code-inputs { display: flex; gap: 10px; justify-content: center; margin: 10px 0 4px; }
-.code-inputs input {
-  width: 42px; height: 50px; text-align: center; font-size: 20px;
-  border: 1px solid #d0d5dd; border-radius: 10px; outline: none;
-}
-.code-inputs input:focus { border-color: #5c94f0; border-width: 2px; }
 
 /* Toggle buttons (for reset method) */
 .toggle-group {
