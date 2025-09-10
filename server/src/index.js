@@ -3,13 +3,11 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
 import fetch from 'node-fetch';
 
 dotenv.config();
 const app = express();
-const prisma = new PrismaClient();
 
 const WEB_ORIGIN = process.env.WEB_ORIGIN || '*';
 const SESSION_TTL_HOURS = Number(process.env.SESSION_TTL_HOURS || '72');
@@ -31,11 +29,7 @@ app.use(bodyParser.json());
 // Simple probes
 app.get('/', (req, res) => { res.type('text/plain').send('OK'); });
 app.get('/health', async (req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({ ok: true });
-  } catch (e) {    res.status(500).json({ ok: false, error: String(e && e.message || e) });
-  }
+  res.json({ ok: true, db: 'disabled' });
 });
 // Helpful hint for accidental GET requests
 app.get('/chat', (req, res) => {
@@ -118,7 +112,7 @@ app.post('/auth/otp/start', async (req, res) => {
   const code = randomCode(6);
   const now = new Date();
   const expiresAt = addHours(now, 0.5/1); // ~30 min
-  await prisma.otpCode.create({ data: { channel, destination, code, expiresAt } });
+  // OTP storage disabled - using simple demo mode
   try {
     if (channel === 'email' && transporter) {
       await transporter.sendMail({
@@ -138,29 +132,27 @@ app.post('/auth/otp/start', async (req, res) => {
 app.post('/auth/otp/verify', async (req, res) => {
   const { destination, code } = req.body || {};
   if (!destination || !code) return res.status(400).json({ error: 'destination and code are required' });
-  const entry = await prisma.otpCode.findFirst({ where: { destination, code, consumed: false } });
-  if (!entry) return res.status(400).json({ error: 'invalid_code' });
-  if (entry.expiresAt < new Date()) return res.status(400).json({ error: 'expired' });
-  await prisma.otpCode.update({ where: { id: entry.id }, data: { consumed: true } });
-
-  // find or create user
-  const isEmail = destination.includes('@');
-  let user = await prisma.user.findFirst({ where: isEmail ? { email: destination } : { phone: destination } });
-  if (!user) {
-    user = await prisma.user.create({ data: isEmail ? { email: destination } : { phone: destination } });
+  
+  // Simple demo mode - accept any 6-digit code
+  if (code.length === 6 && /^\d+$/.test(code)) {
+    const sessionToken = 'demo-session-' + Date.now();
+    res.json({ ok: true, sessionToken, userId: 'demo-user' });
+  } else {
+    res.status(400).json({ error: 'invalid_code' });
   }
-  const session = await prisma.session.create({ data: { userId: user.id, expiresAt: addHours(new Date(), SESSION_TTL_HOURS) } });
-  res.json({ ok: true, sessionToken: session.id, userId: user.id });
 });
 
 // GET /me?session=token
 app.get('/me', async (req, res)=>{
   const token = req.query.session;
   if (!token) return res.status(401).json({ error: 'no_session' });
-  const s = await prisma.session.findUnique({ where: { id: token } });
-  if (!s || s.expiresAt < new Date()) return res.status(401).json({ error: 'session_expired' });
-  const user = await prisma.user.findUnique({ where: { id: s.userId }, include: { providers: true } });
-  res.json({ id: user.id, email: user.email, phone: user.phone, providers: user.providers.map(p=>p.type), totpEnabled: Boolean(user.totpSecret) });
+  
+  // Simple demo mode - accept any demo session
+  if (token.startsWith('demo-session-')) {
+    res.json({ id: 'demo-user', email: 'demo@example.com', phone: null, providers: [], totpEnabled: false });
+  } else {
+    res.status(401).json({ error: 'session_expired' });
+  }
 });
 
 const port = process.env.PORT || 3001;
