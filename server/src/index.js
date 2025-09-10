@@ -61,8 +61,8 @@ app.post('/chat', async (req, res) => {
     const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-4o-mini');
     const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
 
-    // guard: invalid/non-ascii characters in key
-    if (!apiKey || /[^ -~]/.test(apiKey)) {
+    // guard: empty key
+    if (!apiKey) {
       return res.status(500).json({ error: 'invalid_api_key' });
     }
 
