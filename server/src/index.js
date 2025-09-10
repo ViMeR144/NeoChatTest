@@ -66,6 +66,7 @@ app.post('/chat', async (req, res) => {
       return res.status(500).json({ error: 'invalid_api_key' });
     }
 
+    console.log('Making request to OpenRouter API...');
     const resp = await ndFetch(apiBase + '/chat/completions', {
       method: 'POST',
       headers: {
@@ -78,6 +79,7 @@ app.post('/chat', async (req, res) => {
         temperature: 0.7
       })
     });
+    console.log('OpenRouter API response status:', resp.status);
     if (!resp.ok) {
       const t = await resp.text();
       console.error('OpenAI error:', resp.status, t);
