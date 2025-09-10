@@ -46,7 +46,7 @@ app.post('/chat', async (req, res) => {
     console.log('Using OpenRouter:', usingOpenRouter);
     // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
     const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
-    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '');
+    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '').replace(/[^\x20-\x7E]/g, '');
     console.log('API key length:', apiKey.length);
     const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
     if (!Array.isArray(messages) || !messages.length) {
