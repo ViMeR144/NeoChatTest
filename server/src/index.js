@@ -39,6 +39,7 @@ app.get('/chat', (req, res) => {
 // POST /chat { messages: [{role, content}], model? }
 app.post('/chat', async (req, res) => {
   try {
+    console.log('Chat request received:', { body: req.body });
     const { messages, model } = req.body || {};
     const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
     // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
