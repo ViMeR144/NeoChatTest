@@ -47,9 +47,9 @@ app.post('/chat', async (req, res) => {
   try {
     const { messages, model } = req.body || {};
     const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
-    // sanitize API key (strip quotes/spaces/newlines)
+    // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
     const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
-    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '');
+    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '');
     const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
     if (!Array.isArray(messages) || !messages.length) {
       return res.status(400).json({ error: 'messages required' });
