@@ -68,11 +68,13 @@ app.post('/chat', async (req, res) => {
     }
 
     console.log('Making request to OpenRouter API...');
+    const authHeader = `Bearer ${apiKey}`;
+    console.log('Authorization header preview:', authHeader.substring(0, 20) + '...');
     const resp = await ndFetch(apiBase + '/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': authHeader
       },
       body: JSON.stringify({
         model: effectiveModel,
