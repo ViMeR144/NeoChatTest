@@ -24,45 +24,13 @@
 </header>
 <!-- From Uiverse.io by micaelgomestavares --> 
 <form id="loginForm" class="form">
-    <!-- Method Selector -->
-    <div class="reg-method-selector">
-      <div class="reg-method-tab active" data-method="email">
-        <span class="reg-method-icon">📧</span>
-        Email
-      </div>
-      <div class="reg-method-tab" data-method="phone">
-        <span class="reg-method-icon">📱</span>
-        Телефон
-      </div>
-    </div>
-
-    <!-- Email Section -->
-    <div class="form-field visible" id="email-section">
     <div class="flex-column">
       <label>Email </label></div>
-      <div class="inputForm email-suggest">
-        <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
-        <input id="loginEmail" type="email" class="input" placeholder="Enter your Email" required>
-        <div class="suggest-menu hidden" id="loginEmailSuggest"></div>
-      </div>
+    <div class="inputForm email-suggest">
+      <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
+      <input id="loginEmail" type="email" class="input" placeholder="Enter your Email" required>
+      <div class="suggest-menu hidden" id="loginEmailSuggest"></div>
     </div>
-
-    <!-- Phone Section -->
-    <div class="form-field hidden" id="phone-section">
-      <div class="flex-column">
-        <label>Телефон </label></div>
-      <div class="inputForm">
-        <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        <div class="phone-input-container">
-          <div class="phone-country-selector" id="phoneCountrySelector">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAyMCAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjRjAwIi8+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwIi8+CjxyZWN0IHk9IjEwIiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K" alt="🇩🇪" class="phone-country-flag">
-            <span class="phone-country-code">+49</span>
-            <div class="phone-dropdown-arrow"></div>
-          </div>
-          <input id="loginPhone" type="tel" class="input phone-input" placeholder="322 343 43">
-        </div>
-      </div>
-      </div>
     
     <div class="flex-column">
       <label>Password </label></div>
@@ -107,7 +75,49 @@
 
         GitHub 
 
-</button></div></form>
+</button></div>
+
+    <!-- Phone Login Button -->
+    <div class="phone-login-section">
+      <button type="button" class="btn phone-login-btn" id="btnPhoneLogin">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+        Войти по номеру телефона
+      </button>
+    </div>
+</form>
+
+<!-- Phone Login Form -->
+<form id="phoneLoginForm" class="form hidden">
+  <div class="flex-column">
+    <label>Телефон</label>
+  </div>
+  <div class="inputForm">
+    <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+    <div class="phone-input-container">
+      <div class="phone-country-selector" id="phoneLoginCountrySelector">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAyMCAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjRjAwIi8+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwIi8+CjxyZWN0IHk9IjEwIiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K" alt="🇩🇪" class="phone-country-flag">
+        <span class="phone-country-code">+49</span>
+        <div class="phone-dropdown-arrow"></div>
+      </div>
+      <input id="phoneLoginInput" type="tel" class="input phone-input" placeholder="322 343 43" required>
+    </div>
+  </div>
+  
+  <div class="flex-column">
+    <label>Пароль</label>
+  </div>
+  <div class="inputForm">
+    <svg height="20" viewBox="-64 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0"></path><path d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0"></path></svg>
+    <input id="phoneLoginPassword" type="password" class="input" placeholder="Введите пароль">
+    <svg class="toggle-visibility" viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg" aria-label="Show password"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+  </div>
+
+  <button type="button" class="button-submit" id="btnPhoneLoginSubmit">Войти</button>
+  <p class="p">Нет аккаунта? <span class="span" id="linkPhoneToRegister">Зарегистрироваться</span></p>
+  <p class="p">Есть email? <span class="span" id="linkPhoneToEmail">Войти по email</span></p>
+</form>
 
 <!-- Registration form (same design) -->
 <form id="registerForm" class="form hidden">
@@ -171,6 +181,35 @@
     <p class="p">Уже есть аккаунт? <span class="span" id="linkToLogin">Войти</span></p>
 </form>
 
+<!-- Modal OTP Verification -->
+<div id="otpModal" class="modal-overlay">
+  <div class="modal-otp">
+    <button class="modal-close" id="btnModalClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <h2>Введите код</h2>
+    <p>Мы отправили код подтверждения на <span class="email-highlight" id="modalVerifyEmailView"></span></p>
+    
+    <div class="otp-container">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    </div>
+    
+    <button type="button" class="verify-btn" id="btnModalOtpConfirm">Подтвердить</button>
+    
+    <a href="#" class="resend-link" id="btnModalOtpResend">Отправить код ещё раз</a>
+  </div>
+</div>
+
+<!-- Keep old form as backup -->
 <form id="verifyForm" class="form verify-form hidden">
   <h2>Подтверждение</h2>
   <p>Мы отправили 6‑значный код на <span class="email-highlight" id="verifyEmailView"></span>. Введите код ниже.</p>
@@ -235,6 +274,13 @@
     var linkToLogin = document.getElementById('linkToLogin');
     var btnLogin = document.getElementById('btnLogin');
     var btnRegister = document.getElementById('btnRegister');
+    
+    // Phone login elements
+    var btnPhoneLogin = document.getElementById('btnPhoneLogin');
+    var phoneLoginForm = document.getElementById('phoneLoginForm');
+    var linkPhoneToRegister = document.getElementById('linkPhoneToRegister');
+    var linkPhoneToEmail = document.getElementById('linkPhoneToEmail');
+    var btnPhoneLoginSubmit = document.getElementById('btnPhoneLoginSubmit');
     var linkForgot = document.getElementById('linkForgot');
     var linkBackLogin = document.getElementById('linkBackLogin');
     var btnReset = document.getElementById('btnReset');
@@ -245,29 +291,131 @@
     if (linkToRegister) {
       linkToRegister.addEventListener('click', function() {
         loginForm.classList.add('hidden');
+        if (phoneLoginForm) phoneLoginForm.classList.add('hidden');
         registerForm.classList.remove('hidden');
       });
     }
     if (linkToLogin) {
       linkToLogin.addEventListener('click', function() {
         registerForm.classList.add('hidden');
+        if (phoneLoginForm) phoneLoginForm.classList.add('hidden');
         loginForm.classList.remove('hidden');
       });
     }
     function showVerify(email){
+      // Show modal instead of form
+      showModalOTP(email);
+      
+      // Keep old form as backup
       if (!verifyForm) return;
       var v = document.getElementById('verifyEmailView'); if (v) v.textContent = email || '';
       loginForm.classList.add('hidden');
       registerForm.classList.add('hidden');
       resetForm.classList.add('hidden');
+      if (phoneLoginForm) phoneLoginForm.classList.add('hidden');
       verifyForm.classList.remove('hidden');
       var boxes = document.querySelectorAll('#emailCodeInputs input');
       if (boxes.length) boxes[0].focus();
     }
+    
+    function showModalOTP(email) {
+      const modal = document.getElementById('otpModal');
+      const emailSpan = document.getElementById('modalVerifyEmailView');
+      
+      emailSpan.textContent = email;
+      
+      // Clear all OTP inputs
+      modal.querySelectorAll('.otp-input').forEach(function(input) {
+        input.value = '';
+      });
+      
+      // Show modal
+      modal.classList.add('active');
+      
+      // Wire up OTP inputs
+      wireModalOTPInputs();
+      
+      // Focus first input
+      const firstInput = modal.querySelector('.otp-input');
+      if (firstInput) {
+        setTimeout(() => firstInput.focus(), 100);
+      }
+    }
+    
+    function hideModalOTP() {
+      const modal = document.getElementById('otpModal');
+      modal.classList.remove('active');
+    }
+    
+    function wireModalOTPInputs() {
+      const modal = document.getElementById('otpModal');
+      const inputs = Array.prototype.slice.call(modal.querySelectorAll('.otp-input'));
+      
+      inputs.forEach(function(inp, idx) {
+        inp.addEventListener('input', function() {
+          if (inp.value && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+          
+          // Check if all inputs are filled
+          checkModalOTPComplete();
+        });
+        
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !inp.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+        });
+        
+        inp.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const pasteData = e.clipboardData.getData('text');
+          const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+          
+          digits.split('').forEach((digit, index) => {
+            if (inputs[index]) {
+              inputs[index].value = digit;
+            }
+          });
+          
+          // Focus last filled input or next empty
+          const lastFilledIndex = Math.min(digits.length, inputs.length - 1);
+          inputs[lastFilledIndex].focus();
+          
+          checkModalOTPComplete();
+        });
+      });
+    }
+    
+    function checkModalOTPComplete() {
+      const modal = document.getElementById('otpModal');
+      const inputs = modal.querySelectorAll('.otp-input');
+      const confirmBtn = document.getElementById('btnModalOtpConfirm');
+      
+      let allFilled = true;
+      inputs.forEach(function(input) {
+        if (!input.value.trim()) {
+          allFilled = false;
+        }
+      });
+      
+      confirmBtn.disabled = !allFilled;
+    }
+    
+    function getModalOTPCode() {
+      const modal = document.getElementById('otpModal');
+      let code = '';
+      modal.querySelectorAll('.otp-input').forEach(function(input) {
+        code += (input.value || '').trim();
+      });
+      return code;
+    }
+    
     function showLogin(){
       if (verifyForm) verifyForm.classList.add('hidden');
       registerForm.classList.add('hidden');
       resetForm.classList.add('hidden');
+      if (phoneLoginForm) phoneLoginForm.classList.add('hidden');
       loginForm.classList.remove('hidden');
     }
     if (btnRegister) {
@@ -583,11 +731,166 @@
         });
       });
     });
+
+    // Phone login functionality
+    if (btnPhoneLogin) {
+      btnPhoneLogin.addEventListener('click', function() {
+        loginForm.classList.add('hidden');
+        phoneLoginForm.classList.remove('hidden');
+      });
+    }
+
+    if (linkPhoneToEmail) {
+      linkPhoneToEmail.addEventListener('click', function() {
+        phoneLoginForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+      });
+    }
+
+    if (linkPhoneToRegister) {
+      linkPhoneToRegister.addEventListener('click', function() {
+        phoneLoginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+      });
+    }
+
+    // Phone login form submission
+    if (btnPhoneLoginSubmit) {
+      btnPhoneLoginSubmit.addEventListener('click', function() {
+        var phone = document.getElementById('phoneLoginInput').value.trim();
+        var password = document.getElementById('phoneLoginPassword').value.trim();
+        
+        if (!phone || !password) {
+          showToast('Заполните все поля', 'error');
+          return;
+        }
+        
+        // Here you would implement phone login logic
+        showToast('Вход по телефону пока не реализован', 'info');
+      });
+    }
+
+    // Phone formatting for phone login form
+    var phoneLoginInput = document.getElementById('phoneLoginInput');
+    if (phoneLoginInput) {
+      phoneLoginInput.addEventListener('input', function(e) {
+        const formatted = formatPhoneNumber(e.target.value, selectedCountry.code);
+        e.target.value = formatted;
+      });
+      
+      phoneLoginInput.classList.add('phone-input');
+    }
+
+    // Country selector for phone login
+    var phoneLoginCountrySelector = document.getElementById('phoneLoginCountrySelector');
+    if (phoneLoginCountrySelector) {
+      phoneLoginCountrySelector.addEventListener('click', function() {
+        const currentIndex = countries.indexOf(selectedCountry);
+        const nextIndex = (currentIndex + 1) % countries.length;
+        selectedCountry = countries[nextIndex];
+        
+        // Update display
+        const flagImg = phoneLoginCountrySelector.querySelector('.phone-country-flag');
+        const codeSpan = phoneLoginCountrySelector.querySelector('.phone-country-code');
+        
+        flagImg.alt = selectedCountry.flag;
+        codeSpan.textContent = selectedCountry.code;
+        
+        // Update phone input formatting
+        if (phoneLoginInput && phoneLoginInput.value) {
+          const formatted = formatPhoneNumber(phoneLoginInput.value, selectedCountry.code);
+          phoneLoginInput.value = formatted;
+        }
+      });
+    }
+
     wireCodeInputs();
     function sendOtp(destination, channel = 'email'){ return fetch(API_BASE + '/auth/otp/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ channel: channel, destination: destination }) }).then(function(r){ return r.json(); }); }
     if (linkStartOtp) { linkStartOtp.addEventListener('click', function(){ var email = (loginEmailInput && loginEmailInput.value.trim()) || ''; if (!email) { showToast('Введите email','info'); return; } sendOtp(email).then(function(){ showVerify(email); history.replaceState(null,'','?mode=verify&email='+encodeURIComponent(email)); showToast('Код отправлен','success'); }).catch(function(){ showToast('Не удалось отправить код','error'); }); }); }
     if (btnOtpBack) btnOtpBack.addEventListener('click', function(){ clearCode(); showLogin(); history.replaceState(null,'','?mode=login'); });
     if (btnOtpResend) btnOtpResend.addEventListener('click', function(){ var email = (document.getElementById('verifyEmailView').textContent)||''; if (!email) return; sendOtp(email).then(function(){ showToast('Код отправлен повторно','success'); }); });
+
+    // Modal OTP event handlers
+    const modalCloseBtn = document.getElementById('btnModalClose');
+    const modalConfirmBtn = document.getElementById('btnModalOtpConfirm');
+    const modalResendBtn = document.getElementById('btnModalOtpResend');
+    
+    if (modalCloseBtn) {
+      modalCloseBtn.addEventListener('click', function() {
+        hideModalOTP();
+        showLogin();
+      });
+    }
+    
+    // Close modal when clicking outside
+    const modalOverlay = document.getElementById('otpModal');
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          hideModalOTP();
+          showLogin();
+        }
+      });
+    }
+    
+    if (modalConfirmBtn) {
+      modalConfirmBtn.addEventListener('click', function() {
+        const code = getModalOTPCode();
+        if (code.length !== 6) {
+          showToast('Введите полный код', 'error');
+          return;
+        }
+        
+        // Disable button during verification
+        modalConfirmBtn.disabled = true;
+        modalConfirmBtn.textContent = 'Проверяем...';
+        
+        // Verify OTP (same logic as old form)
+        fetch(API_BASE + '/auth/otp/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        })
+        .then(response => response.json())
+        .then(function(result) {
+          if (result.success) {
+            showToast('Код подтверждён!', 'success');
+            hideModalOTP();
+            // Redirect to chat or main page
+            setTimeout(function() {
+              window.location.href = 'chat.html';
+            }, 1000);
+          } else {
+            showToast('Неверный код', 'error');
+            // Clear inputs
+            modalOverlay.querySelectorAll('.otp-input').forEach(function(input) {
+              input.value = '';
+            });
+            modalOverlay.querySelector('.otp-input').focus();
+          }
+        })
+        .catch(function() {
+          showToast('Ошибка проверки кода', 'error');
+        })
+        .finally(function() {
+          modalConfirmBtn.disabled = false;
+          modalConfirmBtn.textContent = 'Подтвердить';
+        });
+      });
+    }
+    
+    if (modalResendBtn) {
+      modalResendBtn.addEventListener('click', function() {
+        const email = document.getElementById('modalVerifyEmailView').textContent;
+        if (!email) return;
+        
+        sendOtp(email).then(function() {
+          showToast('Код отправлен повторно', 'success');
+        }).catch(function() {
+          showToast('Не удалось отправить код', 'error');
+        });
+      });
+    }
     if (btnOtpConfirm) btnOtpConfirm.addEventListener('click', function(){ var email = (document.getElementById('verifyEmailView').textContent)||''; var code = collectCode(); if (code.length !== 6) { showToast('Введите 6 цифр','info'); return; } fetch(API_BASE + '/auth/otp/verify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ destination: email, code: code }) }).then(function(r){ return r.json(); }).then(function(data){ if (data && data.ok) { try { localStorage.setItem('sessionToken', data.sessionToken); localStorage.setItem('authed','1'); localStorage.setItem('provider','OTP'); } catch(e){} window.location.href='chat.html?start=chat'; } else { showToast('Неверный код','error'); } }).catch(function(){ showToast('Ошибка подтверждения','error'); }); });
     if (linkForgot) {
       linkForgot.addEventListener('click', function(){
