@@ -24,13 +24,38 @@
 </header>
 <!-- From Uiverse.io by micaelgomestavares --> 
 <form id="loginForm" class="form">
-    <div class="flex-column">
-      <label>Email </label></div>
+    <!-- Method Selector -->
+    <div class="reg-method-selector">
+      <div class="reg-method-tab active" data-method="email">
+        <span class="reg-method-icon">📧</span>
+        Email
+      </div>
+      <div class="reg-method-tab" data-method="phone">
+        <span class="reg-method-icon">📱</span>
+        Телефон
+      </div>
+    </div>
+
+    <!-- Email Section -->
+    <div class="form-field visible" id="email-section">
+      <div class="flex-column">
+        <label>Email </label></div>
       <div class="inputForm email-suggest">
         <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
         <input id="loginEmail" type="email" class="input" placeholder="Enter your Email" required>
         <div class="suggest-menu hidden" id="loginEmailSuggest"></div>
       </div>
+    </div>
+
+    <!-- Phone Section -->
+    <div class="form-field hidden" id="phone-section">
+      <div class="flex-column">
+        <label>Телефон </label></div>
+      <div class="inputForm">
+        <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        <input id="loginPhone" type="tel" class="input" placeholder="Введите номер телефона">
+      </div>
+    </div>
     
     <div class="flex-column">
       <label>Password </label></div>
@@ -271,15 +296,32 @@
 
         if (hasError) return;
         // After successful validation — send OTP and open verify tab
-        var emailToUse = (email && email.value.trim()) || '';
-        if (!emailToUse) { showToast('Введите email', 'info'); return; }
-        fetch(API_BASE + '/auth/otp/start', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ channel:'email', destination: emailToUse })
-        }).then(function(){
-          showVerify(emailToUse);
-          history.replaceState(null,'','?mode=verify&email='+encodeURIComponent(emailToUse));
-          showToast('Код отправлен на почту','success');
+        var activeTab = document.querySelector('.reg-method-tab.active');
+        var method = activeTab ? activeTab.dataset.method : 'email';
+        
+        var destination = '';
+        var channel = 'email';
+        var message = '';
+        
+        if (method === 'phone') {
+          destination = phoneVal;
+          channel = 'sms';
+          message = 'Код отправлен на телефон';
+        } else {
+          destination = emailVal;
+          channel = 'email';
+          message = 'Код отправлен на почту';
+        }
+        
+        if (!destination) { 
+          showToast(method === 'phone' ? 'Введите телефон' : 'Введите email', 'info'); 
+          return; 
+        }
+        
+        sendOtp(destination, channel).then(function(){
+          showVerify(destination);
+          history.replaceState(null,'','?mode=verify&email='+encodeURIComponent(destination));
+          showToast(message,'success');
         }).catch(function(){ showToast('Не удалось отправить код','error'); });
       });
     }
@@ -322,8 +364,42 @@
     function collectCode(){ var s=''; document.querySelectorAll('#emailCodeInputs input').forEach(function(i){ s += (i.value||'').trim(); }); return s; }
     function clearCode(){ document.querySelectorAll('#emailCodeInputs input').forEach(function(i){ i.value=''; }); }
     function wireCodeInputs(){ var inputs = Array.prototype.slice.call(document.querySelectorAll('#emailCodeInputs input')); inputs.forEach(function(inp, idx){ inp.addEventListener('input', function(){ if (inp.value && idx<inputs.length-1) inputs[idx+1].focus(); }); inp.addEventListener('keydown', function(e){ if (e.key==='Backspace' && !inp.value && idx>0) inputs[idx-1].focus(); }); }); }
+
+    // Registration method selector
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.reg-method-tab');
+      const emailSection = document.getElementById('email-section');
+      const phoneSection = document.getElementById('phone-section');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          const method = this.dataset.method;
+          
+          if (method === 'email') {
+            emailSection.classList.remove('hidden');
+            emailSection.classList.add('visible');
+            phoneSection.classList.remove('visible');
+            phoneSection.classList.add('hidden');
+            document.getElementById('loginEmail').required = true;
+            document.getElementById('loginPhone').required = false;
+          } else if (method === 'phone') {
+            phoneSection.classList.remove('hidden');
+            phoneSection.classList.add('visible');
+            emailSection.classList.remove('visible');
+            emailSection.classList.add('hidden');
+            document.getElementById('loginPhone').required = true;
+            document.getElementById('loginEmail').required = false;
+          }
+        });
+      });
+    });
     wireCodeInputs();
-    function sendOtp(email){ return fetch(API_BASE + '/auth/otp/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ channel:'email', destination: email }) }).then(function(r){ return r.json(); }); }
+    function sendOtp(destination, channel = 'email'){ return fetch(API_BASE + '/auth/otp/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ channel: channel, destination: destination }) }).then(function(r){ return r.json(); }); }
     if (linkStartOtp) { linkStartOtp.addEventListener('click', function(){ var email = (loginEmailInput && loginEmailInput.value.trim()) || ''; if (!email) { showToast('Введите email','info'); return; } sendOtp(email).then(function(){ showVerify(email); history.replaceState(null,'','?mode=verify&email='+encodeURIComponent(email)); showToast('Код отправлен','success'); }).catch(function(){ showToast('Не удалось отправить код','error'); }); }); }
     if (btnOtpBack) btnOtpBack.addEventListener('click', function(){ clearCode(); showLogin(); history.replaceState(null,'','?mode=login'); });
     if (btnOtpResend) btnOtpResend.addEventListener('click', function(){ var email = (document.getElementById('verifyEmailView').textContent)||''; if (!email) return; sendOtp(email).then(function(){ showToast('Код отправлен повторно','success'); }); });

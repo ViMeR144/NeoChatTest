@@ -396,3 +396,60 @@
   color: #007bff;
   font-weight: 600;
 }
+
+/* Registration Method Selector */
+.reg-method-selector {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.reg-method-tab {
+  flex: 1;
+  padding: 12px 20px;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #666;
+  position: relative;
+  z-index: 1;
+}
+
+.reg-method-tab.active {
+  background: #fff;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.reg-method-tab:hover:not(.active) {
+  color: #333;
+  background: rgba(255,255,255,0.5);
+}
+
+.reg-method-icon {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Form Field Animations */
+.form-field {
+  transition: all 0.3s ease;
+}
+
+.form-field.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.form-field.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
