@@ -273,7 +273,7 @@
         // After successful validation — send OTP and open verify tab
         var emailToUse = (email && email.value.trim()) || '';
         if (!emailToUse) { showToast('Введите email', 'info'); return; }
-        fetch('http://localhost:3001/auth/otp/start', {
+        fetch(API_BASE + '/auth/otp/start', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ channel:'email', destination: emailToUse })
         }).then(function(){
