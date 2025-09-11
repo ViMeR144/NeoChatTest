@@ -488,6 +488,24 @@
   transition: background-color 0.3s ease;
 }
 
+/* Dropdown spacing fix */
+.phone-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.phone-input-container::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
+  z-index: 5;
+}
+
 .phone-country-selector:hover {
   background-color: rgba(0,0,0,0.05);
 }
@@ -803,7 +821,7 @@
 
 /* Phone Login Button Styles */
 .phone-login-section {
-  margin-top: 20px;
+  margin-top: 8px;
   text-align: center;
 }
 
