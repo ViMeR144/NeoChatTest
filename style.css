@@ -453,3 +453,150 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Phone Input Formatting */
+.phone-input {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  padding-left: 60px;
+}
+
+.phone-input::placeholder {
+  font-family: inherit;
+  letter-spacing: normal;
+}
+
+/* Phone input with country selector */
+.phone-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.phone-country-selector {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.phone-country-selector:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.phone-country-flag {
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.phone-country-code {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.phone-dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #666;
+  transition: transform 0.3s ease;
+}
+
+.phone-country-selector.open .phone-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Verification Form Design */
+.verify-form {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  color: white;
+}
+
+.verify-form h2 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.verify-form p {
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 35px;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.verify-form .email-highlight {
+  color: #fff;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.verify-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+.verify-btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.verify-btn.primary {
+  background: white;
+  color: #667eea;
+}
+
+.verify-btn.secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.verify-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.verify-btn.secondary:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.resend-link {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 20px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.resend-link:hover {
+  color: white;
+  text-decoration: underline;
+}

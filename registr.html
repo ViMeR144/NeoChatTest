@@ -53,7 +53,14 @@
         <label>Телефон </label></div>
       <div class="inputForm">
         <svg height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        <input id="loginPhone" type="tel" class="input" placeholder="Введите номер телефона">
+        <div class="phone-input-container">
+          <div class="phone-country-selector" id="phoneCountrySelector">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAyMCAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjRjAwIi8+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwIi8+CjxyZWN0IHk9IjEwIiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K" alt="🇩🇪" class="phone-country-flag">
+            <span class="phone-country-code">+49</span>
+            <div class="phone-dropdown-arrow"></div>
+          </div>
+          <input id="loginPhone" type="tel" class="input phone-input" placeholder="322 343 43">
+        </div>
       </div>
     </div>
     
@@ -139,24 +146,25 @@
     <p class="p">Уже есть аккаунт? <span class="span" id="linkToLogin">Войти</span></p>
 </form>
 
-<form id="verifyForm" class="form hidden">
-  <div class="flex-column"><label>Подтверждение</label></div>
-  <p class="p">Мы отправили 6‑значный код на <span id="verifyEmailView"></span>. Введите код ниже.</p>
-  <div class="code-inputs" id="emailCodeInputs">
-    <input type="text" inputmode="numeric" maxlength="1" />
-    <input type="text" inputmode="numeric" maxlength="1" />
-    <input type="text" inputmode="numeric" maxlength="1" />
-    <input type="text" inputmode="numeric" maxlength="1" />
-    <input type="text" inputmode="numeric" maxlength="1" />
-    <input type="text" inputmode="numeric" maxlength="1" />
+<form id="verifyForm" class="form verify-form hidden">
+  <h2>Подтверждение</h2>
+  <p>Мы отправили 6‑значный код на <span class="email-highlight" id="verifyEmailView"></span>. Введите код ниже.</p>
+  
+  <div class="otp-container">
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
+    <input type="text" inputmode="numeric" maxlength="1" class="otp-input" />
   </div>
-  <div class="flex-row">
-    <button type="button" class="btn" id="btnOtpBack">Назад</button>
-    <button type="button" class="btn primary" id="btnOtpConfirm">Подтвердить</button>
+  
+  <div class="verify-buttons">
+    <button type="button" class="verify-btn secondary" id="btnOtpBack">Назад</button>
+    <button type="button" class="verify-btn primary" id="btnOtpConfirm">Подтвердить</button>
   </div>
-  <div class="flex-row">
-    <button type="button" class="btn" id="btnOtpResend">Отправить код ещё раз</button>
-  </div>
+  
+  <a href="#" class="resend-link" id="btnOtpResend">Отправить код ещё раз</a>
 </form>
 
 <!-- Форма сброса пароля (тот же дизайн) -->
@@ -361,15 +369,94 @@
     var btnOtpConfirm = document.getElementById('btnOtpConfirm');
     var btnOtpResend = document.getElementById('btnOtpResend');
     var loginEmailInput = document.getElementById('loginEmail');
-    function collectCode(){ var s=''; document.querySelectorAll('#emailCodeInputs input').forEach(function(i){ s += (i.value||'').trim(); }); return s; }
-    function clearCode(){ document.querySelectorAll('#emailCodeInputs input').forEach(function(i){ i.value=''; }); }
-    function wireCodeInputs(){ var inputs = Array.prototype.slice.call(document.querySelectorAll('#emailCodeInputs input')); inputs.forEach(function(inp, idx){ inp.addEventListener('input', function(){ if (inp.value && idx<inputs.length-1) inputs[idx+1].focus(); }); inp.addEventListener('keydown', function(e){ if (e.key==='Backspace' && !inp.value && idx>0) inputs[idx-1].focus(); }); }); }
+    function collectCode(){ var s=''; document.querySelectorAll('.otp-input').forEach(function(i){ s += (i.value||'').trim(); }); return s; }
+    function clearCode(){ document.querySelectorAll('.otp-input').forEach(function(i){ i.value=''; }); }
+    function wireCodeInputs(){ var inputs = Array.prototype.slice.call(document.querySelectorAll('.otp-input')); inputs.forEach(function(inp, idx){ inp.addEventListener('input', function(){ if (inp.value && idx<inputs.length-1) inputs[idx+1].focus(); }); inp.addEventListener('keydown', function(e){ if (e.key==='Backspace' && !inp.value && idx>0) inputs[idx-1].focus(); }); }); }
+
+    // Phone formatting function
+    function formatPhoneNumber(value, countryCode = '+49') {
+      // Remove all non-digits
+      const phoneNumber = value.replace(/\D/g, '');
+      
+      // Format based on country code
+      if (countryCode === '+49') {
+        // German format: +49 322 343 43
+        if (phoneNumber.length >= 3) {
+          const formatted = phoneNumber.match(/.{1,3}/g).join(' ');
+          return formatted;
+        }
+      } else if (countryCode === '+1') {
+        // US format: (322) 343-4343
+        if (phoneNumber.length >= 10) {
+          return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+        }
+      } else if (countryCode === '+7') {
+        // Russian format: +7 322 343 43 43
+        if (phoneNumber.length >= 10) {
+          const formatted = phoneNumber.match(/.{1,3}/g).join(' ');
+          return formatted;
+        }
+      }
+      
+      return phoneNumber;
+    }
+
+    // Country codes data
+    const countries = [
+      { code: '+49', flag: '🇩🇪', name: 'Germany' },
+      { code: '+1', flag: '🇺🇸', name: 'United States' },
+      { code: '+7', flag: '🇷🇺', name: 'Russia' },
+      { code: '+44', flag: '🇬🇧', name: 'United Kingdom' },
+      { code: '+33', flag: '🇫🇷', name: 'France' },
+      { code: '+39', flag: '🇮🇹', name: 'Italy' },
+      { code: '+34', flag: '🇪🇸', name: 'Spain' },
+      { code: '+86', flag: '🇨🇳', name: 'China' },
+      { code: '+81', flag: '🇯🇵', name: 'Japan' },
+      { code: '+82', flag: '🇰🇷', name: 'South Korea' }
+    ];
+
+    let selectedCountry = countries[0]; // Default to Germany
 
     // Registration method selector
     document.addEventListener('DOMContentLoaded', function() {
       const tabs = document.querySelectorAll('.reg-method-tab');
       const emailSection = document.getElementById('email-section');
       const phoneSection = document.getElementById('phone-section');
+      const phoneInput = document.getElementById('loginPhone');
+      
+      // Add phone formatting
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+          const formatted = formatPhoneNumber(e.target.value, selectedCountry.code);
+          e.target.value = formatted;
+        });
+        
+        phoneInput.classList.add('phone-input');
+      }
+
+      // Country selector functionality
+      const countrySelector = document.getElementById('phoneCountrySelector');
+      if (countrySelector) {
+        countrySelector.addEventListener('click', function() {
+          // Simple country selection for now
+          const currentIndex = countries.indexOf(selectedCountry);
+          const nextIndex = (currentIndex + 1) % countries.length;
+          selectedCountry = countries[nextIndex];
+          
+          // Update display
+          const flagImg = countrySelector.querySelector('.phone-country-flag');
+          const codeSpan = countrySelector.querySelector('.phone-country-code');
+          
+          flagImg.alt = selectedCountry.flag;
+          codeSpan.textContent = selectedCountry.code;
+          
+          // Update phone input formatting
+          if (phoneInput && phoneInput.value) {
+            const formatted = formatPhoneNumber(phoneInput.value, selectedCountry.code);
+            phoneInput.value = formatted;
+          }
+        });
+      }
       
       tabs.forEach(tab => {
         tab.addEventListener('click', function() {
