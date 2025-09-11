@@ -83,7 +83,7 @@ app.post('/chat', async (req, res) => {
       body: JSON.stringify({
         model: effectiveModel,
         messages: messages.map(m => ({ role: m.role || 'user', content: String(m.content || '') })),
-        temperature: 0.7
+        temperature: 1
       })
     });
     console.log('OpenRouter API response status:', resp.status);
