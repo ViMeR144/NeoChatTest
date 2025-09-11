@@ -42,7 +42,7 @@ app.post('/chat', async (req, res) => {
     console.log('Chat request received:', { body: req.body });
     const { messages, model } = req.body || {};
     console.log('Parsed messages:', messages);
-    const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
+    const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY) && !process.env.OPENAI_API_KEY;
     console.log('Using OpenRouter:', usingOpenRouter);
     // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
     const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
@@ -63,7 +63,7 @@ app.post('/chat', async (req, res) => {
       return res.json({ ok: true, reply: `Эхо: ${last && last.content ? String(last.content).slice(0, 400) : ''}` });
     }
 
-    const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-4o-mini');
+    const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-5-nano');
     const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
 
     // guard: empty key
