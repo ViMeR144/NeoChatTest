@@ -46,9 +46,13 @@ app.post('/chat', async (req, res) => {
     console.log('Using OpenRouter:', usingOpenRouter);
     // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
     const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
-    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '').replace(/[^\x20-\x7E]/g, '');
-    console.log('API key length:', apiKey.length);
-    console.log('API key preview:', apiKey.substring(0, 10) + '...' + apiKey.substring(apiKey.length - 10));
+    console.log('Raw API key length:', (rawKey || '').length);
+    console.log('Raw API key preview:', (rawKey || '').substring(0, 20) + '...' + (rawKey || '').substring((rawKey || '').length - 20));
+    
+    // Try to preserve the key as much as possible, only remove truly problematic chars
+    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '');
+    console.log('Sanitized API key length:', apiKey.length);
+    console.log('Sanitized API key preview:', apiKey.substring(0, 20) + '...' + apiKey.substring(apiKey.length - 20));
     const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
     if (!Array.isArray(messages) || !messages.length) {
       return res.status(400).json({ error: 'messages required' });
