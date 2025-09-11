@@ -338,3 +338,61 @@
   .auth-hero-glow { width: 300px; height: 300px; filter: blur(46px); }
   .form { width: calc(100vw - 32px); max-width: 420px; margin: 0 16px; border-radius: 16px; }
 }
+
+/* OTP Input Styles */
+.otp-input {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  margin: 0 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.otp-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+  transform: translateY(-2px);
+}
+
+.otp-input:not(:placeholder-shown) {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.verify-form {
+  text-align: center;
+  padding: 20px;
+}
+
+.verify-form h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.verify-form p {
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.verify-form .email-highlight {
+  color: #007bff;
+  font-weight: 600;
+}
