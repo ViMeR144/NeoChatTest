@@ -12,8 +12,8 @@
 <body class="page-center">
 <div class="toast-container" id="toastContainer"></div>
 <div class="auth-hero">
-  <h1>Добро пожаловать</h1>
-  <p>Войдите или создайте аккаунт, чтобы продолжить</p>
+  <h1>Создать аккаунт</h1>
+  <p>Зарегистрируйтесь, чтобы начать пользоваться чатом</p>
   <div class="auth-hero-glow" aria-hidden="true"></div>
 </div>
 <header class="site-header">
@@ -38,8 +38,8 @@
 
     <!-- Email Section -->
     <div class="form-field visible" id="email-section">
-      <div class="flex-column">
-        <label>Email </label></div>
+    <div class="flex-column">
+      <label>Email </label></div>
       <div class="inputForm email-suggest">
         <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
         <input id="loginEmail" type="email" class="input" placeholder="Enter your Email" required>
@@ -62,7 +62,7 @@
           <input id="loginPhone" type="tel" class="input phone-input" placeholder="322 343 43">
         </div>
       </div>
-    </div>
+      </div>
     
     <div class="flex-column">
       <label>Password </label></div>
@@ -111,19 +111,44 @@
 
 <!-- Registration form (same design) -->
 <form id="registerForm" class="form hidden">
+    <!-- Registration Method Selector -->
+    <div class="reg-method-selector">
+      <div class="reg-method-tab active" data-method="email">
+        <div class="reg-method-icon">📧</div>
+        Email
+      </div>
+      <div class="reg-method-tab" data-method="phone">
+        <div class="reg-method-icon">📱</div>
+        Телефон
+      </div>
+    </div>
+
+    <!-- Email Section -->
+    <div class="form-field visible" id="register-email-section">
     <div class="flex-column">
       <label>Email </label></div>
       <div class="inputForm email-suggest">
         <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
-        <input id="registerEmail" type="text" class="input" placeholder="Enter your Email">
+        <input id="registerEmail" type="text" class="input" placeholder="Enter your Email" required>
         <div class="suggest-menu hidden" id="registerEmailSuggest"></div>
       </div>
+      </div>
     
+    <!-- Phone Section -->
+    <div class="form-field hidden" id="register-phone-section">
     <div class="flex-column">
       <label>Phone </label></div>
       <div class="inputForm phone-box">
         <svg height="20" viewBox="0 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M391.1 330.9c-12.5-12.5-32.8-12.5-45.3 0l-25.4 25.4c-43.5-23.2-79-58.7-102.2-102.2l25.4-25.4c12.5-12.5 12.5-32.8 0-45.3l-64-64c-12.5-12.5-32.8-12.5-45.3 0l-32 32c-9.2 9.2-13.1 22.4-10.3 35.2c28.1 126.6 126.6 225.1 253.2 253.2c12.8 2.8 26-1.1 35.2-10.3l32-32c12.5-12.5 12.5-32.8 0-45.3l-64-64z"/></svg>
-        <input id="registerPhone" type="tel" class="input" placeholder="Enter your Phone" inputmode="numeric" maxlength="15">
+        <div class="phone-input-container">
+          <div class="phone-country-selector" id="registerPhoneCountrySelector">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTUiIHZpZXdCb3g9IjAgMCAyMCAxNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjRjAwIi8+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwIi8+CjxyZWN0IHk9IjEwIiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K" alt="🇩🇪" class="phone-country-flag">
+            <span class="phone-country-code">+49</span>
+            <div class="phone-dropdown-arrow"></div>
+          </div>
+          <input id="registerPhone" type="tel" class="input phone-input" placeholder="322 343 43">
+        </div>
+      </div>
       </div>
 
     <div class="flex-column">
@@ -419,10 +444,17 @@
 
     // Registration method selector
     document.addEventListener('DOMContentLoaded', function() {
-      const tabs = document.querySelectorAll('.reg-method-tab');
+      // Login method selector
+      const loginTabs = document.querySelectorAll('.reg-method-tab');
       const emailSection = document.getElementById('email-section');
       const phoneSection = document.getElementById('phone-section');
       const phoneInput = document.getElementById('loginPhone');
+      
+      // Registration method selector
+      const registerTabs = document.querySelectorAll('#registerForm .reg-method-tab');
+      const registerEmailSection = document.getElementById('register-email-section');
+      const registerPhoneSection = document.getElementById('register-phone-section');
+      const registerPhoneInput = document.getElementById('registerPhone');
       
       // Add phone formatting
       if (phoneInput) {
@@ -457,8 +489,42 @@
           }
         });
       }
+
+      // Registration phone formatting
+      if (registerPhoneInput) {
+        registerPhoneInput.addEventListener('input', function(e) {
+          const formatted = formatPhoneNumber(e.target.value, selectedCountry.code);
+          e.target.value = formatted;
+        });
+        
+        registerPhoneInput.classList.add('phone-input');
+      }
+
+      // Registration country selector
+      const registerCountrySelector = document.getElementById('registerPhoneCountrySelector');
+      if (registerCountrySelector) {
+        registerCountrySelector.addEventListener('click', function() {
+          const currentIndex = countries.indexOf(selectedCountry);
+          const nextIndex = (currentIndex + 1) % countries.length;
+          selectedCountry = countries[nextIndex];
+          
+          // Update display
+          const flagImg = registerCountrySelector.querySelector('.phone-country-flag');
+          const codeSpan = registerCountrySelector.querySelector('.phone-country-code');
+          
+          flagImg.alt = selectedCountry.flag;
+          codeSpan.textContent = selectedCountry.code;
+          
+          // Update phone input formatting
+          if (registerPhoneInput && registerPhoneInput.value) {
+            const formatted = formatPhoneNumber(registerPhoneInput.value, selectedCountry.code);
+            registerPhoneInput.value = formatted;
+          }
+        });
+      }
       
-      tabs.forEach(tab => {
+      // Login tabs
+      loginTabs.forEach(tab => {
         tab.addEventListener('click', function() {
           // Remove active class from all tabs
           tabs.forEach(t => t.classList.remove('active'));
@@ -481,6 +547,38 @@
             emailSection.classList.add('hidden');
             document.getElementById('loginPhone').required = true;
             document.getElementById('loginEmail').required = false;
+          }
+        });
+      });
+
+      // Registration tabs
+      registerTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all registration tabs
+          registerTabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          const method = this.getAttribute('data-method');
+          
+          if (method === 'email') {
+            registerEmailSection.classList.remove('hidden');
+            registerEmailSection.classList.add('visible');
+            registerPhoneSection.classList.add('hidden');
+            registerPhoneSection.classList.remove('visible');
+            
+            // Set required attributes
+            document.getElementById('registerEmail').required = true;
+            document.getElementById('registerPhone').required = false;
+          } else if (method === 'phone') {
+            registerPhoneSection.classList.remove('hidden');
+            registerPhoneSection.classList.add('visible');
+            registerEmailSection.classList.add('hidden');
+            registerEmailSection.classList.remove('visible');
+            
+            // Set required attributes
+            document.getElementById('registerPhone').required = true;
+            document.getElementById('registerEmail').required = false;
           }
         });
       });
@@ -662,9 +760,9 @@
             '&state=' + state;
           window.location.href = url;
         });
-      }
-    })();
-  </script>
+    }
+  })();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.7/build/js/intlTelInput.min.js"></script>
 <script>
