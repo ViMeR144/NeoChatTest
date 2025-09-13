@@ -341,8 +341,8 @@ func main() {
 
 		startTime := time.Now()
 
-		// Forward request to Python API
-		pythonAPIURL := "http://neural-network-python:8080/api/v1/generate"
+		// Use local neural network instead of Python API
+		// pythonAPIURL := "http://neural-network-python:8080/api/v1/generate"
 		
 		// Create request for Python API
 		pythonReq := map[string]interface{}{
@@ -378,24 +378,21 @@ func main() {
 			return
 		}
 
-		// Make request to Python API
-		resp, err := http.Post(pythonAPIURL, "application/json", strings.NewReader(string(jsonData)))
-		if err != nil {
-			// Fallback to local generation if Python API is not available
-			generatedText := generateSmartResponse(req.Prompt)
-			maxTokens := 50
-			if req.MaxTokens != nil {
-				maxTokens = *req.MaxTokens
-			}
+		// Use local neural network directly
+		generatedText := generateSmartResponse(req.Prompt)
+		maxTokens := 50
+		if req.MaxTokens != nil {
+			maxTokens = *req.MaxTokens
+		}
 
-			generationTime := time.Since(startTime).Milliseconds()
+		generationTime := time.Since(startTime).Milliseconds()
 
-			response := GenerationResponse{
-				Text:               generatedText,
-				TokensGenerated:    maxTokens,
-				GenerationTimeMs:   generationTime,
-				ModelUsed:          "go-fallback-model",
-			}
+		response := GenerationResponse{
+			Text:               generatedText,
+			TokensGenerated:    maxTokens,
+			GenerationTimeMs:   generationTime,
+			ModelUsed:          "go-neural-network",
+		}
 
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
