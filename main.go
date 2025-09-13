@@ -397,8 +397,6 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(response)
-		return
-	}
 	}))
 
 	// Root endpoint
