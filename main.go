@@ -394,31 +394,11 @@ func main() {
 			ModelUsed:          "go-neural-network",
 		}
 
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(response)
-			return
-		}
-		defer resp.Body.Close()
-
-		// Read response from Python API
-		var pythonResp map[string]interface{}
-		if err := json.NewDecoder(resp.Body).Decode(&pythonResp); err != nil {
-			http.Error(w, "Failed to decode Python API response", http.StatusInternalServerError)
-			return
-		}
-
-		// Convert Python API response to our format
-		response := GenerationResponse{
-			Text:               pythonResp["text"].(string),
-			TokensGenerated:    int(pythonResp["tokens_generated"].(float64)),
-			GenerationTimeMs:   int64(pythonResp["generation_time_ms"].(float64)),
-			ModelUsed:          pythonResp["model_used"].(string),
-		}
-
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(response)
+		return
+	}
 	}))
 
 	// Root endpoint
