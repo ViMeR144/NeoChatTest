@@ -342,41 +342,6 @@ func main() {
 		startTime := time.Now()
 
 		// Use local neural network instead of Python API
-		// pythonAPIURL := "http://neural-network-python:8080/api/v1/generate"
-		
-		// Create request for Python API
-		pythonReq := map[string]interface{}{
-			"prompt":             req.Prompt,
-			"max_tokens":         req.MaxTokens,
-			"temperature":        req.Temperature,
-			"top_k":              req.TopK,
-			"top_p":              req.TopP,
-			"repetition_penalty": req.RepetitionPenalty,
-			"stream":             false,
-		}
-
-		// Set defaults
-		if pythonReq["max_tokens"] == nil {
-			pythonReq["max_tokens"] = 100
-		}
-		if pythonReq["temperature"] == nil {
-			pythonReq["temperature"] = 0.8
-		}
-		if pythonReq["top_k"] == nil {
-			pythonReq["top_k"] = 50
-		}
-		if pythonReq["top_p"] == nil {
-			pythonReq["top_p"] = 0.9
-		}
-		if pythonReq["repetition_penalty"] == nil {
-			pythonReq["repetition_penalty"] = 1.1
-		}
-
-		jsonData, err := json.Marshal(pythonReq)
-		if err != nil {
-			http.Error(w, "Failed to marshal request", http.StatusInternalServerError)
-			return
-		}
 
 		// Use local neural network directly
 		generatedText := generateSmartResponse(req.Prompt)
