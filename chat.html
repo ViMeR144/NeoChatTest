@@ -669,11 +669,15 @@
         
         chat.msgs.push({ role: 'ai', text: reply });
         addMsgEl('ai', reply);
+        // Очищаем поле после получения ответа
+        composerInput.value = '';
       } catch (e) {
         console.error('Error in sendToAI:', e);
         const err = 'Ошибка запроса к нейросети: ' + e.message;
         chat.msgs.push({ role: 'ai', text: err });
         addMsgEl('ai', err);
+        // Очищаем поле даже при ошибке
+        composerInput.value = '';
       }
     }
 
@@ -762,7 +766,8 @@
       if (!chat) return;
       chat.msgs.push({ role: 'user', text: t });
       addMsgEl('user', t);
-      composerInput.value = '';
+      // Не очищаем поле сразу, очистим после получения ответа
+      // composerInput.value = '';
       sendToAI(t, chat);
     });
 
