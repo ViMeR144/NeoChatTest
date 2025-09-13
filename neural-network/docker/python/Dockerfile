@@ -1,0 +1,82 @@
+# Multi-stage Dockerfile for Python Neural Network
+FROM python:3.10-slim as builder
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    curl \
+    libopenblas-dev \
+    liblapack-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Install PyTorch (CPU version)
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# Install other Python dependencies
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copy application files
+COPY main.py /tmp/
+COPY api_server.py /tmp/
+
+# Production stage
+FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    libopenblas0 \
+    liblapack3 \
+    libjpeg62-turbo \
+    libpng16-16 \
+    libfreetype6 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python packages from builder stage
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Create app directory
+WORKDIR /app
+
+# Copy application code
+COPY --from=builder /tmp/main.py /app/
+COPY --from=builder /tmp/api_server.py /app/
+COPY models/ /app/models/
+COPY data/ /app/data/
+
+# Create non-root user
+RUN groupadd -r neural && useradd -r -g neural neural
+RUN chown -R neural:neural /app
+
+# Switch to non-root user
+USER neural
+
+# Expose port
+EXPOSE 8081
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8081/health || exit 1
+
+# Start the application
+CMD ["python", "main.py"]
+

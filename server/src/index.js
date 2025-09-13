@@ -5,6 +5,13 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import fetch from 'node-fetch';
+import { spawn } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -42,59 +49,130 @@ app.post('/chat', async (req, res) => {
     console.log('Chat request received:', { body: req.body });
     const { messages, model } = req.body || {};
     console.log('Parsed messages:', messages);
-    const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY) && !process.env.OPENAI_API_KEY;
-    console.log('Using OpenRouter:', usingOpenRouter);
-    // sanitize API key (strip quotes/spaces/newlines and invalid header chars)
-    const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
-    console.log('Raw API key length:', (rawKey || '').length);
-    console.log('Raw API key preview:', (rawKey || '').substring(0, 20) + '...' + (rawKey || '').substring((rawKey || '').length - 20));
     
-    // Try to preserve the key as much as possible, only remove truly problematic chars
-    const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '');
-    console.log('Sanitized API key length:', apiKey.length);
-    console.log('Sanitized API key preview:', apiKey.substring(0, 20) + '...' + apiKey.substring(apiKey.length - 20));
-    const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
     if (!Array.isArray(messages) || !messages.length) {
       return res.status(400).json({ error: 'messages required' });
     }
-    // If no key configured, return a simple echo for development
-    if (!apiKey) {
-      const last = messages[messages.length - 1];
-      return res.json({ ok: true, reply: `Эхо: ${last && last.content ? String(last.content).slice(0, 400) : ''}` });
-    }
 
-    const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-5-nano');
-    const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
+    // Проверяем, хотим ли мы использовать C++ нейросеть
+    const useCPPNeural = process.env.USE_CPP_NEURAL === 'true';
+    
+    if (useCPPNeural) {
+      // Используем C++ нейросеть
+      const lastMessage = messages[messages.length - 1];
+      const userInput = lastMessage && lastMessage.content ? String(lastMessage.content) : '';
+      
+      if (!userInput) {
+        return res.json({ ok: true, reply: 'Please provide a message.' });
+      }
+      
+      // Вызываем C++ программу
+      return new Promise((resolve) => {
+        const cppPath = path.join(__dirname, '../../cpp-neural-network/ai_brain.exe');
+        console.log('Calling C++ neural network:', cppPath);
+        
+        // Запускаем C++ программу в API режиме с аргументом
+        const cppProcess = spawn(cppPath, ['--api', userInput], {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          cwd: path.dirname(cppPath)
+        });
+        
+        let output = '';
+        let errorOutput = '';
+        
+        cppProcess.stdout.on('data', (data) => {
+          output += data.toString();
+        });
+        
+        cppProcess.stderr.on('data', (data) => {
+          errorOutput += data.toString();
+        });
+        
+        cppProcess.on('close', (code) => {
+          console.log('C++ process exited with code:', code);
+          
+          
+          console.log('C++ output:', JSON.stringify(output));
+          console.log('C++ errorOutput:', JSON.stringify(errorOutput));
+          
+          if (code === 0 && output) {
+            // Простой парсинг ответа C++ программы
+            const lines = output.split('\n');
+            let reply = 'I understand your message.';
+            
+            console.log('C++ output lines:', lines.map(line => JSON.stringify(line)));
+            
+            // Ищем ответ нейросети в выводе
+            for (let i = 0; i < lines.length; i++) {
+              if (lines[i].includes('Neural Network:')) {
+                reply = lines[i].replace(/.*Neural Network:\s*/, '').trim();
+                console.log('Found reply:', JSON.stringify(reply));
+                break;
+              }
+            }
+            
+            console.log('Sending response:', { ok: true, reply });
+            res.json({ ok: true, reply });
+          } else {
+            console.error('C++ process error:', errorOutput);
+            res.json({ ok: true, reply: 'I had trouble processing that. Could you try again?' });
+          }
+          resolve();
+        });
+        
+        
+        // Таймаут на случай зависания
+        setTimeout(() => {
+          if (!res.headersSent) {
+            cppProcess.kill();
+            res.json({ ok: true, reply: 'I had trouble processing that. Could you try again?' });
+            resolve();
+          }
+        }, 10000);
+      });
+    } else {
+      // Используем OpenAI как раньше
+      const usingOpenRouter = Boolean(process.env.OPENROUTER_API_KEY) && !process.env.OPENAI_API_KEY;
+      console.log('Using OpenRouter:', usingOpenRouter);
+      
+      const rawKey = usingOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
+      const apiKey = (rawKey || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/[\r\n\t]/g, '');
+      const apiBase = usingOpenRouter ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1';
+      
+      // If no key configured, return a simple echo for development
+      if (!apiKey) {
+        const last = messages[messages.length - 1];
+        return res.json({ ok: true, reply: `Эхо: ${last && last.content ? String(last.content).slice(0, 400) : ''}` });
+      }
 
-    // guard: empty key
-    if (!apiKey) {
-      return res.status(500).json({ error: 'invalid_api_key' });
-    }
+      const requestedModel = (process.env.OPENAI_MODEL || model || 'gpt-5-nano');
+      const effectiveModel = usingOpenRouter ? (`openai/${requestedModel}`) : requestedModel;
 
-    console.log('Making request to OpenRouter API...');
-    const authHeader = `Bearer ${apiKey}`;
-    console.log('Authorization header preview:', authHeader.substring(0, 20) + '...');
-    const resp = await ndFetch(apiBase + '/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader
-      },
-      body: JSON.stringify({
-        model: effectiveModel,
-        messages: messages.map(m => ({ role: m.role || 'user', content: String(m.content || '') })),
-        temperature: 1
-      })
-    });
-    console.log('OpenRouter API response status:', resp.status);
-    if (!resp.ok) {
-      const t = await resp.text();
-      console.error('OpenAI error:', resp.status, t);
-      return res.status(500).json({ error: 'openai_error', details: (process.env.NODE_ENV === 'production') ? undefined : t });
+      console.log('Making request to OpenAI API...');
+      const authHeader = `Bearer ${apiKey}`;
+      const resp = await ndFetch(apiBase + '/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        },
+        body: JSON.stringify({
+          model: effectiveModel,
+          messages: messages.map(m => ({ role: m.role || 'user', content: String(m.content || '') })),
+          temperature: 1
+        })
+      });
+      
+      if (!resp.ok) {
+        const t = await resp.text();
+        console.error('OpenAI error:', resp.status, t);
+        return res.status(500).json({ error: 'openai_error', details: (process.env.NODE_ENV === 'production') ? undefined : t });
+      }
+      
+      const data = await resp.json();
+      const reply = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '';
+      res.json({ ok: true, reply });
     }
-    const data = await resp.json();
-    const reply = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '';
-    res.json({ ok: true, reply });
   } catch (e) {
     console.error('Chat route error:', e);
     res.status(500).json({ error: 'server_error', details: (process.env.NODE_ENV === 'production') ? undefined : String(e && e.message || e) });

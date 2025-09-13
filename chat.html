@@ -503,8 +503,8 @@
 
   <script>
     const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3001'
-      : 'https://neochattest.onrender.com';
+      ? 'http://localhost:8090/api/v1'
+      : 'http://localhost:8090/api/v1';
     const screenSearch = document.getElementById('screen-search');
     const screenChat = document.getElementById('screen-chat');
     const searchForm = document.getElementById('searchForm');
@@ -536,8 +536,8 @@
       const chat = { id, title, msgs: [] };
       chats.unshift(chat); // добавляем в начало списка (сверху)
       activeChatId = id;
+      console.log('Created chat:', id, title);
       renderHistory();
-      openChat(id);
       return chat;
     }
 
@@ -599,12 +599,17 @@
     }
 
     function openChat(id) {
+      console.log('Opening chat:', id);
       const chat = chats.find(c => c.id === id);
-      if (!chat) return;
+      if (!chat) {
+        console.log('Chat not found:', id);
+        return;
+      }
       activeChatId = id;
       chatTitle.textContent = chat.title;
       messagesEl.innerHTML = '';
       chat.msgs.forEach(m => addMsgEl(m.role, m.text));
+      console.log('Chat opened successfully:', chat.title);
     }
 
     function addMsgEl(role, text) {
@@ -631,23 +636,42 @@
 
     async function sendToAI(text, chat) {
       try {
-        const resp = await fetch(API_BASE + '/chat', {
+        console.log('Sending to Neural Network:', text);
+        
+        // Формируем контекст из истории чата
+        let context = text;
+        if (chat.msgs.length > 0) {
+          const recentMessages = chat.msgs.slice(-4); // Берем последние 4 сообщения для контекста
+          context = recentMessages.map(m => 
+            m.role === 'user' ? `Пользователь: ${m.text}` : `Ассистент: ${m.text}`
+          ).join('\n') + `\nПользователь: ${text}`;
+        }
+        
+        const resp = await fetch(API_BASE + '/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            messages: [
-              { role: 'system', content: 'Ты дружелюбный помощник.' },
-              ...chat.msgs.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })),
-              { role: 'user', content: text }
-            ]
+            prompt: context,
+            max_tokens: 200,
+            temperature: 0.7,
+            top_k: 50,
+            top_p: 0.9,
+            repetition_penalty: 1.1
           })
         });
+        
+        console.log('Response status:', resp.status);
         const data = await resp.json();
-        const reply = (data && data.reply) || 'Извините, произошла ошибка.';
+        console.log('Response data:', data);
+        
+        const reply = (data && data.text) || 'Извините, произошла ошибка.';
+        console.log('Final reply:', reply);
+        
         chat.msgs.push({ role: 'ai', text: reply });
         addMsgEl('ai', reply);
       } catch (e) {
-        const err = 'Ошибка запроса к ИИ';
+        console.error('Error in sendToAI:', e);
+        const err = 'Ошибка запроса к нейросети: ' + e.message;
         chat.msgs.push({ role: 'ai', text: err });
         addMsgEl('ai', err);
       }
@@ -658,15 +682,31 @@
       const q = searchQuery.value.trim();
       if (!q) return;
       hideSuggestions();
+      
+      // Если уже есть активный чат, добавляем сообщение в него
+      if (activeChatId && chats.find(c => c.id === activeChatId)) {
+        const chat = chats.find(c => c.id === activeChatId);
+        chat.msgs.push({ role: 'user', text: q });
+        addMsgEl('user', q);
+        sendToAI(q, chat);
+        searchQuery.value = '';
+        return;
+      }
+      
+      // Создаем новый чат только если нет активного
       const title = q.length > 40 ? q.slice(0, 40) + '…' : q;
       const chat = createChat(title);
       chat.msgs.push({ role: 'user', text: q });
+      
+      // Переключаемся на экран чата
       screenSearch.style.display = 'none';
       screenChat.style.display = 'block';
       document.getElementById('welcome').style.display = 'none';
       document.getElementById('messagesWrap').style.display = 'grid';
+      
       addMsgEl('user', q);
       sendToAI(q, chat);
+      searchQuery.value = '';
       composerInput.focus();
     });
 
